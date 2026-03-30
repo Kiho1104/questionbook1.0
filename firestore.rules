@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Collection: questions
+    // Document ID: {questionId}
+    // Fields:
+    //   - userId: string (required) - Owner UID
+    //   - text: string (required) - Question content
+    //   - type: string (required, enum: ["choice", "blank"])
+    //   - options: list (optional) - Options for choice
+    //   - answer: string (required) - Correct answer
+    //   - explanation: string (optional)
+    //   - tags: list (optional) - Tags
+    //   - priority: number (optional) - 1-5
+    //   - stats: map (optional) - {correctCount, totalCount, avgTime, lastPracticedAt}
+    //   - createdAt: number (required)
+    //
+    // Collection: practice_sessions
+    // Document ID: {sessionId}
+    // Fields:
+    //   - userId: string (required) - Owner UID
+    //   - startTime: number (required)
+    //   - endTime: number (optional)
+    //   - questions: list (required) - {questionId, userAnswer, isCorrect, timeSpent}
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function isValidQuestion(data) {
+      return data.keys().hasAll(['userId', 'text', 'type', 'answer', 'createdAt']) &&
+             data.userId is string &&
+             data.text is string && data.text.size() > 0 && data.text.size() < 5000 &&
+             data.type in ['choice', 'blank'] &&
+             data.answer is string && data.answer.size() > 0 &&
+             data.createdAt is number;
+    }
+
+    function isValidSession(data) {
+      return data.keys().hasAll(['userId', 'startTime', 'questions']) &&
+             data.userId is string &&
+             data.startTime is number &&
+             data.questions is list;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /questions/{questionId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && isValidQuestion(request.resource.data) && request.resource.data.userId == request.auth.uid;
+      allow update: if isDocOwner() && isValidQuestion(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isDocOwner();
+    }
+
+    match /practice_sessions/{sessionId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && isValidSession(request.resource.data) && request.resource.data.userId == request.auth.uid;
+      allow update: if isDocOwner() && isValidSession(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isDocOwner();
+    }
+  }
+}

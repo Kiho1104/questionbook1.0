@@ -1,0 +1,62 @@
+{
+  "entities": {
+    "Question": {
+      "title": "Question",
+      "description": "An English mistake question entry.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The user ID of the owner" },
+        "text": { "type": "string", "description": "The question text" },
+        "type": { "type": "string", "enum": ["choice", "blank"], "description": "The type of question" },
+        "options": { "type": "array", "items": { "type": "string" }, "description": "List of options for multiple choice questions" },
+        "answer": { "type": "string", "description": "The correct answer" },
+        "explanation": { "type": "string", "description": "Brief explanation of the answer" },
+        "tags": { "type": "array", "items": { "type": "string" }, "description": "Tags for categorization" },
+        "priority": { "type": "number", "description": "The priority for practice (1-5)" },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "correctCount": { "type": "number" },
+            "totalCount": { "type": "number" },
+            "avgTime": { "type": "number" },
+            "lastPracticedAt": { "type": "number" }
+          }
+        },
+        "createdAt": { "type": "number", "description": "Timestamp of creation" }
+      },
+      "required": ["userId", "text", "type", "answer"]
+    },
+    "PracticeSession": {
+      "title": "PracticeSession",
+      "description": "A record of a practice session.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The user ID of the owner" },
+        "startTime": { "type": "number" },
+        "endTime": { "type": "number" },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "questionId": { "type": "string" },
+              "userAnswer": { "type": "string" },
+              "isCorrect": { "type": "boolean" },
+              "timeSpent": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/questions/{questionId}": {
+      "schema": "Question",
+      "description": "Collection of questions"
+    },
+    "/practice_sessions/{sessionId}": {
+      "schema": "PracticeSession",
+      "description": "Collection of practice sessions"
+    }
+  }
+}
