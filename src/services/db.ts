@@ -67,7 +67,7 @@ export const dbService = {
    */
   async deleteQuestion(id: string) {
     try {
-      await db.collection('questions').doc(id).remove()
+      await db.collection('questions').doc(id).remove({})
     } catch (error) {
       console.error('删除错题失败:', error)
       throw error

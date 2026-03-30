@@ -44,6 +44,12 @@ const config = {
           namingPattern: 'module', // 转换模式，取值为 global/module
           generateScopedName: '[name]__[local]___[hash:base64:5]'
         }
+      },
+      tailwindcss: {
+        enable: true
+      },
+      autoprefixer: {
+        enable: true
       }
     },
     // 关键：配置 Webpack 插件以支持 weapp-tailwindcss
@@ -76,6 +82,9 @@ const config = {
           namingPattern: 'module', // 转换模式，取值为 global/module
           generateScopedName: '[name]__[local]___[hash:base64:5]'
         }
+      },
+      tailwindcss: {
+        enable: true
       }
     }
   }

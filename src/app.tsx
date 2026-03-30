@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import Taro, { useLaunch } from '@tarojs/taro'
 import './app.css'
 
-function App({ children }) {
+function App({ children }: { children: React.ReactNode }) {
   useLaunch(() => {
     console.log('App launched.')
     // 初始化微信云开发 (CloudBase)

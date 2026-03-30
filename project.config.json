@@ -1,5 +1,6 @@
 {
   "miniprogramRoot": "dist/",
+  "cloudfunctionRoot": "cloudfunctions/",
   "projectname": "questionbook-taro",
   "description": "错题本小程序",
   "appid": "touristappid",

@@ -10,4 +10,4 @@ export default defineAppConfig({
   },
   // 启用微信云开发
   cloud: true
-})
+} as any)

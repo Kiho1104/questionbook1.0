@@ -11,11 +11,11 @@ export async function analyzeQuestion(imageBase64: string) {
   
   // 1. 先调用微信云开发 OCR 提取文字 (示例)
   try {
-    const ocrResult = await Taro.cloud.callFunction({
+    const ocrResult: any = await Taro.cloud.callFunction({
       name: 'ocr-extract', // 您需要创建这个云函数
       data: { image: imageBase64 }
     })
-    const text = ocrResult.result.text;
+    const text = ocrResult?.result?.text || '';
 
     // 2. 将文字发送给 DeepSeek 进行解析
     const response = await Taro.request({
