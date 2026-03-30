@@ -1,5 +1,5 @@
 {
-  "name": "错题本",
-  "description": "AI 驱动的全学科错题管理工具，支持照片扫描、智能解析、多维统计及激励机制，助你高效攻克薄弱环节。",
+  "name": "错题本小程序",
+  "description": "基于 Taro (React) + 微信云开发 + DeepSeek AI 构建的跨端错题管理小程序。",
   "requestFramePermissions": ["camera"]
 }
